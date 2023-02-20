@@ -5,3 +5,9 @@
 ## Design 
 
 ![Architecture](docs/arch/notifications-manager.png)
+
+## Setup & Run
+
+```
+docker-compose -f ./notifications-api/docker-compose.yaml up
+```
