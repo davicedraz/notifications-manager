@@ -1,0 +1,14 @@
+{
+  "name": "client",
+  "version": "0.0.0",
+  "description": "A simple server of an HTML page to test receiving notifications",
+  "main": "index.js",
+  "scripts": {
+    "start": "live-server ./public"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "live-server": "^1.2.2"
+  }
+}
