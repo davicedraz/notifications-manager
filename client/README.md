@@ -1,4 +1,4 @@
-﻿# Dummy Client for Demo
+﻿# Dummy client for testing
 
   *A simple server of an HTML page to test receiving notifications*
 
