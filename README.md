@@ -8,6 +8,12 @@
 
 ## Setup & Run
 
+```bash
+docker network create notifications-net
+```
 ```
 docker-compose -f ./notifications-api/docker-compose.yaml up
+```
+```
+docker-compose -f ./notifications-service-worker/docker-compose.yaml up
 ```

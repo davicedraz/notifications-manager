@@ -1,15 +1,16 @@
 ﻿console.log("Service working initiated!");
 
 self.addEventListener('push', function (event) {
-  const body = event.data?.text() ?? '';
+  const payload = event.data.json();
+  console.log('Notification Received:', payload);
 
-  // const data = e.data.json();
-  // console.log(data)
-  console.log('Notification Received');
+  const title = payload.title;
+  const options = {
+    body: payload.body,
+    icon: payload.image
+  };
 
   event.waitUntil(
-    self.registration.showNotification('Test', {
-      body
-    })
+    self.registration.showNotification(title, options)
   )
-})
+});
