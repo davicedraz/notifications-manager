@@ -5,11 +5,11 @@
 ## Project
 This solution proposes APIs and workers for sending notifications. Due to the potential high scale sending notifications, it is not possible to deliver them in real time. So the main goal is to enable horizontally scaling the components is to ensure that users get notifications as quickly as possible. If the system is under a high workload, in the best case, notifications will be sent with a slight delay. The number of queued notifications can be used to decide when and how much services need to scale. The more notifications, the more workers are needed to read from queues and send them.
 
-To ensure that each component has its own versionable repository, this project is divided into 2 submodules and a dummy Client to test sending notifications. Check each one out to see how to run them individually, or skip to the "Setup & Run" section at the bottom of the page to see how to run all components together.
+To ensure that each component has its own versionable repository, this project is divided into 2 submodules and a dummy Client to test sending notifications. Check each one out to see how to run them individually, or skip to the [Setup & Run](#Setup_&_Run) section at the bottom of the page to see how to run all components together.
 
-- https://github.com/davicedraz/notifications-manager/tree/master/client
 - https://github.com/davicedraz/notifications-api
 - https://github.com/davicedraz/notifications-service-worker
+- https://github.com/davicedraz/notifications-manager/tree/master/client
 
 ## Working flow
 1. A service or client calls the APIs provided to send a new notification
@@ -114,14 +114,23 @@ If a provider happens to fail to send a notification, the notification can be ad
 Providers are the real ones responsible for sending notifications to users' devices. To ensure extensibility, it is important that it is easy to add or remove providers from Workers. It is good that there is redundancy in the types of services offered by providers. If one becomes unavailable, an alternative provider can be used to ensure that the notification is sent as quickly as possible.
 
 ## Proof of Concept
+As a partial implementation of the project presented above, minimum viable versions of the Notifications API, Users API and Notifications Service Worker components were built and can be run together to have a demonstration of the workflow described at the beginning of the page.
 
 ![POC Architecture](docs/img/architecture-poc.png)
+
 ## Setup & Run
+
+To run this proof of concept, you will need [docker](https://docs.docker.com/engine/install) and [docker-compose](https://docs.docker.com.xy2401.com/v17.12/compose/install/). If you prefer to run each component individually on your own machine, see the README.md for each repository listed at the top of the page.
+
+1. Clone the project and define an `.env` file for each of the components.
+
+2. Create a Docker network called notifications-net by running the command:
 
 ```bash
 docker network create notifications-net
 ```
 
+3. Start the API and worker containers by running the following commands in separate terminal windows:
 ```
 docker-compose -f ./notifications-api/docker-compose.yaml up
 ```
@@ -130,10 +139,29 @@ docker-compose -f ./notifications-api/docker-compose.yaml up
 docker-compose -f ./notifications-service-worker/docker-compose.yaml up
 ```
 
+4. Build the example of Client Docker image by running the command:
+
 ```
-docker build -t notifications-client-example .
+docker build -t notifications-client-example ./client
 ```
+5. Start the client container by running the command in a separate terminal window:
 
 ```
 docker run -p 8080:8080 --network notifications-net --name notifications-client-example notifications-client-example
 ```
+
+![Docker](docs/img/containers-docker.png)
+
+## How to use it
+
+1. Run all components manually or using Docker
+2. Once all components are up and running, create a new user using the Users API.
+
+    Tip: the APIs have a [Swagger](https://swagger.io/) that you can visit at http://localhost:3000/docs
+
+3. Ensure that the `email` used to create the user is the same used by the dummy client [here](https://github.com/davicedraz/notifications-manager/blob/master/client/public/main.js#L1)
+4. Open the client page in your browser and check if notifications permissions are enabled for the address where the client is being served
+5. If everything is running as expected, you should be able to GET the user you created and verify that your `webPushSubscription` attribute has been filled in by the Client
+6. Now just create a new notification using the Notifications API and see the web push notification coming. Something like this:
+
+![Example](docs/img/demo-notification.png)
