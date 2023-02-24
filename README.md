@@ -165,3 +165,5 @@ docker run -p 8080:8080 --network notifications-net --name notifications-client-
 6. Now just create a new notification using the Notifications API and see the web push notification coming. Something like this:
 
 ![Example](docs/img/demo-notification.png)
+
+Final tip: you can access http://localhost:15672/ to see RabbitMQ queue and connections 😃
